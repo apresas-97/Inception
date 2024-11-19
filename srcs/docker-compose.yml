@@ -1,0 +1,17 @@
+//
+
+nginx:
+  container_name: nginx
+  build: ./requirements/nginx
+  # volumes:
+    # - ./requirements/nginx/log:/var/log/nginx
+    # - ~/Documents/inception/srcs/requirements/wordpress/website:/var/www/html
+  # networks:
+    # - # Here goes the network to which all the services are connected
+  ports:
+    - '443:443'
+  expose:
+    - '443'
+  depends_on:
+    # - wordpress # Which service must be up before this service starts
+  restart: always
