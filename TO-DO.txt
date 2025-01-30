@@ -1,0 +1,27 @@
+[] Set up a VM
+[x] Find Docker documentation and add it to TO-DO
+[x] Read about PID 1
+[x] Read about Daemons
+
+[] Docker documentation
+	[] The basics
+		[x] What is a container?
+			[x] Running a container
+			[x] Overview of a container
+			[x] Why Docker?
+		[x] What is an image?
+			[x] Docker trusted content
+			[x] Explore the image view in Docker Desktop
+			[x] Docker Build Overview
+			[x] Docker Hub
+		[x] What is a registry?
+			[x] Docker Hub Quickstart
+			[x] Manage Docker Hub Repositories
+		[x] What is Docker Compose?
+			[x] Overview of Docker Compose
+			[x] Overview of Docker Compose CLI
+			[x] How Compose works
+
+nginx/Dockerfile
+[] Confirm the rm -rf /var/lib/apt/lists/* does what you say it does
+

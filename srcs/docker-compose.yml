@@ -1,17 +1,45 @@
-//
+services:
+  nginx:
+    image: nginx # TO-DO: Check this
+    container_name: nginx
+    build: ./requirements/nginx
+    ports:
+      - '433:433'
+    depends_on:
+      - wordpress # Which service must be up before this service starts
+    volumes:
+      - wordpress_data:/var/www/html
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - inception # Network to which all services are connected to
 
-nginx:
-  container_name: nginx
-  build: ./requirements/nginx
-  # volumes:
-    # - ./requirements/nginx/log:/var/log/nginx
-    # - ~/Documents/inception/srcs/requirements/wordpress/website:/var/www/html
-  # networks:
-    # - # Here goes the network to which all the services are connected
-  ports:
-    - '443:443'
-  expose:
-    - '443'
-  depends_on:
-    # - wordpress # Which service must be up before this service starts
-  restart: always
+  # mariadb:
+  # wordpress:
+
+networks:
+  inception:
+    name: inception
+    driver: bridge
+
+volumes:
+  mariadb_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${HOME}/data/mysql
+      o: bind
+  wordpress_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${HOME}/data/wordpress
+      o: bind
+
+# nginx:
+#   # volumes:
+#     # - ./requirements/nginx/log:/var/log/nginx
+#     # - ~/Documents/inception/srcs/requirements/wordpress/website:/var/www/html
+#   expose: #?
+#     - '443'
