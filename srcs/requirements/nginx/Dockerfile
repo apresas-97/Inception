@@ -1,10 +1,9 @@
 FROM debian:bullseye
 
-RUN apt-get update && \
-	apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
 	nginx \
-	openssl && \
-	rm -rf /var/lib/apt/lists/*
+	openssl \
+	&& rm -rf /var/lib/apt/lists/*
 # the last remove is to get rid of cached package lists that got
 # downloaded when using apt-get update TO-DO: Confirm this
 
