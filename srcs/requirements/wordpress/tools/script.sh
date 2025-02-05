@@ -7,7 +7,7 @@ fi
 
 cd $WORDPRESS_PATH;
 
-if  ! [ [ -f "wp-config.php" ] && wp config has DB_PASSWORD --allow-root ];
+if  ! ( [ -f "wp-config.php" ] && wp config has DB_PASSWORD --allow-root );
 then
     cp wp-config-sample.php wp-config.php
 
