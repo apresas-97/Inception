@@ -15,10 +15,12 @@ HOME = /home/apresas
 all: up
 
 up: volumes
-	docker compose -f $(YML_FILE) -p $(PROJECT_NAME) $(UP)
+	docker-compose -f $(YML_FILE) -p $(PROJECT_NAME) $(UP)
 
 down:
-	docker compose -f $(YML_FILE) -p $(PROJECT_NAME) $(DOWN)
+	docker-compose -f $(YML_FILE) -p $(PROJECT_NAME) $(DOWN)
+
+restart: down up
 
 volumes:
 	sudo $(MKDIR) $(HOME)/data/mysql
@@ -27,7 +29,7 @@ volumes:
 	sudo chmod -R 744 $(HOME)/data/
 
 clean:
-	docker compose -f $(YML_FILE) -p $(PROJECT_NAME) $(DOWN) $(DOWN_FLAGS)
+	docker-compose -f $(YML_FILE) -p $(PROJECT_NAME) $(DOWN) $(DOWN_FLAGS)
 	docker system prune -af --volumes
 	rm -rf $(HOME)/data/mysql/*
 	rm -rf $(HOME)/data/wordpress/*
@@ -41,4 +43,4 @@ check_data:
 
 re: clean all
 
-.PHONY: all up down volumes clean check_data re
+.PHONY: all up down restart volumes clean check_data re

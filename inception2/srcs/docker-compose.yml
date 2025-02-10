@@ -3,7 +3,7 @@ services:
     container_name: mariadb
     build: requirements/mariadb
     volumes:
-      - database:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
     env_file:
       - .env
     restart: always
@@ -17,7 +17,7 @@ services:
     depends_on:
       - wordpress
     volumes:
-      - website_files:/var/www/html
+      - wordpress_data:/var/www/html
     env_file:
       - .env
     restart: always
@@ -26,15 +26,15 @@ services:
   wordpress:
     container_name: wordpress
     build: requirements/wordpress
+    depends_on:
+      - mariadb
     volumes:
-      - website_files:/var/www/html
+      - wordpress_data:/var/www/html
     env_file:
       - .env
     restart: always
     networks:
       - inception
-    depends_on:
-      - mariadb
 
 networks:
   inception:
@@ -42,15 +42,15 @@ networks:
     driver: bridge
 
 volumes:
-  database:
+  mariadb_data:
     driver: local
     driver_opts:
       type: none
-      device: /home/apresas/data/mysql
+      device: ${HOME}/data/mysql
       o: bind
-  website_files:
+  wordpress_data:
     driver: local
     driver_opts:
       type: none
-      device: /home/apresas/data/wordpress
+      device: ${HOME}/data/wordpress
       o: bind

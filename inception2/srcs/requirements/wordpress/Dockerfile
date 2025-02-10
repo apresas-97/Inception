@@ -9,11 +9,15 @@ RUN apt-get update && apt-get install -y \
     && curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
     && chmod +x wp-cli.phar \
     && mv wp-cli.phar /usr/local/bin/wp \
-    && wp cli update
+    && wp cli update \
+    && mkdir -p /run/php \
+    && chmod 755 /run/php
+#CHECK remove wp cli update?
 
 COPY conf/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 
 COPY tools/wordpress_entrypoint.sh /usr/local/bin/wordpress_entrypoint.sh
+RUN chmod 755 /usr/local/bin/wordpress_entrypoint.sh
 
 EXPOSE 9000
 

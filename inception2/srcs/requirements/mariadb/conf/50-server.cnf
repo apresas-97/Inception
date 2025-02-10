@@ -14,13 +14,13 @@
 
 user                    = mysql
 pid-file                = /run/mysqld/mysqld.pid
+socket                  = /run/mysqld/mysqld.sock
 port					= 3306
 basedir                 = /usr
 datadir                 = /var/lib/mysql
 tmpdir                  = /tmp
 lc-messages-dir         = /usr/share/mysql
-lc-messages             = en_US
-skip-external-locking
+#skip-external-locking
 
 # Broken reverse DNS slows down connections considerably and name resolve is
 # safe to skip if there are no "host by domain name" access grants
@@ -43,6 +43,12 @@ bind-address            = 0.0.0.0
 #myisam_recover_options = BACKUP
 #max_connections        = 100
 #table_cache            = 64
+
+#
+# * Query Cache Configuration
+#
+#query_cache_limit      = 1M
+query_cache_size        = 16M
 
 #
 # * Logging and Replication
@@ -71,7 +77,7 @@ bind-address            = 0.0.0.0
 #       other settings you may need to change.
 #server-id              = 1
 #log_bin                = /var/log/mysql/mysql-bin.log
-expire_logs_days        = 10
+#expire_logs_days        = 10
 #max_binlog_size        = 100M
 
 #
@@ -91,8 +97,8 @@ expire_logs_days        = 10
 
 # MySQL/MariaDB default is Latin1, but in Debian we rather default to the full
 # utf8 4-byte character set. See also client.cnf
-character-set-server  = utf8mb4
-collation-server      = utf8mb4_general_ci
+#character-set-server  = utf8mb4
+#collation-server      = utf8mb4_general_ci
 
 #
 # * InnoDB

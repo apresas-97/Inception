@@ -1,38 +1,45 @@
 #!/bin/bash
 
-mkdir -p /run/php
+rm -rf ./*
 
-if ! [ -d "/var/www/html" ]; then
-    wp core download --path=/var/www/html --allow-root
-fi
-
-cd /var/www/html
+sleep 5
 
 if  [ -f "wp-config.php" ]; then
-    if wp config has DB_PASSWORD --allow-root; then
-        rm -rf wp-config.php
-    fi
-fi
-if ! [ -f "wp-config.php" ]; then
-    wp core download --allow-root --path=/var/www/html
-    wp config create --allow-root --path=/var/www/html \
-        --dbname=$DB_NAME \
-        --dbuser=$DB_USER \
-        --dbpass=$DB_USER_PASSWORD \
-        --dbhost=$DB_HOST
-    wp core install --allow-root --path=/var/www/html \
+    echo "WordPress is already installed"
+else
+    echo "WordPress is not installed"
+
+    echo "Downloading WordPress..."
+    wp core download --allow-root
+
+    echo "Creating wp-config.php..."
+    wp config create --allow-root \
+        --dbname=$MYSQL_DATABASE \
+        --dbuser=$MYSQL_USER \
+        --dbpass=$MYSQL_PASSWORD \
+        --dbhost=$MYSQL_HOST
+
+    echo "Installing WordPress..."
+    wp core install --allow-root \
         --url=$DOMAIN_NAME \
-        --title=$WP_TITLE \
-        --admin_user=$WP_ADMIN \
-        --admin_password=$WP_ADMIN_PASSWORD \
-        --admin_email=$WP_ADMIN_EMAIL \
+        --title=$WORDPRESS_TITLE \
+        --admin_user=$WORDPRESS_ADMIN \
+        --admin_password=$WORDPRESS_ADMIN_PASSWORD \
+        --admin_email=$WORDPRESS_ADMIN_EMAIL \
         --skip-email
-    wp user create --allow-root --path=/var/www/html \
-        $WP_USER \
-        $WP_USER_EMAIL \
+    echo "WordPress installed successfully"
+
+    echo "Creating user '${WORDPRESS_USER}'..."
+    wp user create --allow-root \
+        $WORDPRESS_USER \
+        $WORDPRESS_USER_EMAIL \
         --role=author \
-        --user_pass=$WP_USER_PASSWORD
+        --user_pass=$WORDPRESS_USER_PASSWORD
+
+    echo "Installing theme twentytwentyfive..."
 	wp theme install twentytwentyfive --activate --allow-root
 fi
 
-php-fpm7.4 -F
+#CHECK Used to be
+#php-fpm7.4 -F
+/usr/sbin/php-fpm7.4 -F
