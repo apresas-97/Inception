@@ -1,14 +1,10 @@
 #!/bin/bash
 
-rm -rf ./*
-
 sleep 5
 
-if  [ -f "wp-config.php" ]; then
+if  [ -f ./wp-config.php ]; then
     echo "WordPress is already installed"
 else
-    echo "WordPress is not installed"
-
     echo "Downloading WordPress..."
     wp core download --allow-root
 
@@ -17,7 +13,7 @@ else
         --dbname=$MYSQL_DATABASE \
         --dbuser=$MYSQL_USER \
         --dbpass=$MYSQL_PASSWORD \
-        --dbhost=$MYSQL_HOST
+        --dbhost=$MYSQL_HOSTNAME
 
     echo "Installing WordPress..."
     wp core install --allow-root \
@@ -36,10 +32,8 @@ else
         --role=author \
         --user_pass=$WORDPRESS_USER_PASSWORD
 
-    echo "Installing theme twentytwentyfive..."
-	wp theme install twentytwentyfive --activate --allow-root
+    echo "Installing theme twentytwentyfour..."
+	wp theme install twentytwentyfour --activate --allow-root
 fi
 
-#CHECK Used to be
-#php-fpm7.4 -F
 /usr/sbin/php-fpm7.4 -F
