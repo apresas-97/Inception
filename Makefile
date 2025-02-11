@@ -1,13 +1,16 @@
-PROJECT_NAME = Inception
+PROJECT_NAME = inception
 
 YML_FILE = ./srcs/docker-compose.yml
 
-UP = up --deatach --build
+UP = up -d --build
 DOWN = down
 DOWN_FLAGS = --volumes --rmi all
 
 MKDIR = mkdir -p
 RM = rm -rf
+
+USER = apresas
+HOME = /home/apresas
 
 all: up
 
@@ -17,17 +20,23 @@ up: volumes
 down:
 	docker compose -f $(YML_FILE) -p $(PROJECT_NAME) $(DOWN)
 
+restart: down up
+
 volumes:
-	sudo $(MKDIR) ${HOME}/data/mysql
-	sudo $(MKDIR) ${HOME}/data/wordpress
+	sudo $(MKDIR) $(HOME)/data/mysql
+	sudo $(MKDIR) $(HOME)/data/wordpress
 	sudo chown -R $(USER) $(HOME)/data/
-	sudo chmod -R 744 ${HOME}/data/
+	sudo chmod -R 755 $(HOME)/data/
 
 clean:
 	docker compose -f $(YML_FILE) -p $(PROJECT_NAME) $(DOWN) $(DOWN_FLAGS)
 	docker system prune -af --volumes
-	rm -rf ${HOME}/data/mysql/*
-	rm -rf ${HOME}/data/wordpress/*
+
+fclean: clean
+	@echo "WARNING: This will permanently delete all data from the volumes"
+	@read -p "Are you sure you want to delete all data? (y/N): " confirm && [ "$$confirm" = "y" ]
+	rm -rf $(HOME)/data/mysql/*
+	rm -rf $(HOME)/data/wordpress/*
 
 check_data:
 	$(info Checking docker data:)
@@ -38,4 +47,4 @@ check_data:
 
 re: clean all
 
-.PHONY: all up down volumes clean check_data re
+.PHONY: all up down restart volumes clean fclean check_data re
