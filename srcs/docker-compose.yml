@@ -1,7 +1,19 @@
 services:
+  mariadb:
+    container_name: mariadb
+    build: requirements/mariadb
+    image: mariadb
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - inception
   nginx:
     container_name: nginx
-    build: ./requirements/nginx
+    build: requirements/nginx
+    image: nginx
     ports:
       - "443:443"
     depends_on:
@@ -9,32 +21,20 @@ services:
     volumes:
       - wordpress_data:/var/www/html
     env_file:
-      - .env # TO-DO: Decide if this is a good idea, because .env contains the environment variables of all containers, not just nginx
+      - .env
     restart: always
     networks:
       - inception
-
-  mariadb:
-    container_name: mariadb
-    build: ./requirements/mariadb
-    ports:
-      - "3306:3306" # TO-DO: Is this necessary?
-    volumes:
-      - mariadb_data:/var/lib/mysql
-    env_file:
-      - .env # TO-DO: Decide the same as above
-    restart: always
-    networks:
-      - inception
-
   wordpress:
     container_name: wordpress
-    build: ./requirements/wordpress
-    # ports:
+    build: requirements/wordpress
+    image: wordpress
+    depends_on:
+      - mariadb
     volumes:
       - wordpress_data:/var/www/html
     env_file:
-      - .env # TO-DO: Decide the same as above
+      - .env
     restart: always
     networks:
       - inception
@@ -46,15 +46,16 @@ networks:
 
 volumes:
   mariadb_data:
+    name: mariadb_data
     driver: local
     driver_opts:
       type: none
-      device: /home/apresas/data/mysql
+      device: ${HOME}/data/mysql
       o: bind
-
   wordpress_data:
+    name: wordpress_data
     driver: local
     driver_opts:
       type: none
-      device: /home/apresas/data/wordpress
+      device: ${HOME}/data/wordpress
       o: bind
